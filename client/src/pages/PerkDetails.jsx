@@ -68,7 +68,16 @@ export default function PerkDetails() {
 
  // TODO 2: Implement delete functionality with a window confirm dialog 
   async function handleDelete() {
-   
+    // Ask for confirmation first
+    const ok = window.confirm('Are you sure you want to delete this perk? This action cannot be undone.');
+    if (!ok) return;
+    try {
+      await api.delete('/perks/' + id);
+      // go back to list
+      nav('/perks');
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Failed to delete perk');
+    }
   }
 
   if (loading) {
@@ -192,6 +201,7 @@ export default function PerkDetails() {
             Edit Perk
           </Link>
           <button
+            onClick={handleDelete}
             
             className="btn bg-white border-2 border-red-200 text-red-600 hover:bg-red-50 font-semibold px-6 py-3 flex items-center gap-2"
           >
